@@ -157,23 +157,30 @@ export async function getReportsByCategory(
 export async function createReport(
   report: Omit<Report, "id" | "createdAt">
 ): Promise<Report | null> {
+  // Build insert object - skip category_id if empty (category system removed)
+  const insertData: Record<string, unknown> = {
+    name: report.name,
+    description: report.description || null,
+    embed_url: report.embedUrl,
+    sort_order: report.sortOrder ?? 0,
+    is_active: report.isActive ?? true,
+    created_by: report.createdBy,
+  };
+
+  // Only include category_id if it's a valid non-empty string
+  if (report.categoryId && report.categoryId.trim() !== "") {
+    insertData.category_id = report.categoryId;
+  }
+
   const { data, error } = await supabase
     .from("reports")
-    .insert({
-      name: report.name,
-      description: report.description,
-      embed_url: report.embedUrl,
-      category_id: report.categoryId,
-      sort_order: report.sortOrder,
-      is_active: report.isActive,
-      created_by: report.createdBy,
-    })
+    .insert(insertData)
     .select()
     .single();
 
   if (error) {
     console.error("Error creating report:", error);
-    return null;
+    throw new Error(error.message);
   }
 
   return transformReport(data);
