@@ -26,11 +26,22 @@
 | 2026-01-25 | Soft delete for reports | Keep audit history per PRD |
 | 2026-01-25 | Power BI Public Embed only | PRD specifies no paid embedding |
 
+## UI/UX Decisions
+| Date | Decision | Reason |
+|------|----------|--------|
+| 2026-01-26 | Remove category system | Simplify navigation, user requested |
+| 2026-01-26 | Personal pin + sort order | Each user customizes their own sidebar |
+| 2026-01-26 | Drag & drop over viewCount | viewCount sorting not useful in practice |
+| 2026-01-26 | @dnd-kit for drag & drop | Modern, accessible, React-friendly |
+| 2026-01-26 | Separate pinned/unpinned zones | Clear visual separation for users |
+
 ## Rejected Ideas
 | Date | Idea | Why Rejected |
 |------|------|--------------|
 | 2026-01-25 | Redux for state | Overkill for this app size |
 | 2026-01-25 | Server components only | Need client interactivity |
+| 2026-01-26 | ViewCount-based sorting | User found it not useful |
+| 2026-01-26 | Up/Down buttons for reorder | Drag & drop more intuitive |
 
 ## Testing Decisions
 | Date | Decision | Reason |

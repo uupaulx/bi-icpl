@@ -7,52 +7,51 @@
 - Language: Thai UI, English code
 
 ## Completed Features
-- ✅ Microsoft SSO login page (Supabase Auth + Azure AD)
+- ✅ Microsoft SSO login (Supabase Auth + Azure AD)
 - ✅ OAuth callback route and middleware
-- ✅ User Dashboard with report stats and quick access
-- ✅ Collapsible sidebar menu (category → reports)
+- ✅ Collapsible sidebar with search and drag & drop
+- ✅ Report list with pin/unpin and custom ordering
 - ✅ Power BI Report Viewer with iframe embedding
-- ✅ Admin Dashboard with overview stats
 - ✅ Admin Report Management (CRUD)
-- ✅ Admin Category Management (CRUD)
-- ✅ Admin User Management (role, active status)
-- ✅ Admin Access Management (3 views: by user, by report, matrix)
-- ✅ Profile page
+- ✅ Admin User + Access Management (combined page)
 - ✅ Supabase integration (API layer)
-- ✅ Mock data cleared - uses real database only
 
 ## Current State
 Backend Ready - Requires Azure AD configuration in Supabase
 
 ## Key Files
-- `src/app/page.tsx` - User Dashboard
+- `src/app/page.tsx` - Redirects to first report or login
 - `src/app/login/page.tsx` - Login page (Supabase OAuth)
 - `src/app/auth/callback/route.ts` - OAuth callback handler
 - `src/app/reports/[id]/page.tsx` - Report viewer
-- `src/app/admin/*` - Admin pages
-- `src/stores/` - Zustand stores (async methods)
-- `src/lib/api/` - Supabase API functions
-- `src/lib/supabase/client.ts` - Supabase client
-- `src/lib/supabase/server.ts` - Server-side Supabase client
-- `src/middleware.ts` - Session refresh + route protection
-- `supabase/schema.sql` - Database schema + RLS + seed data
-- `supabase/auth-trigger.sql` - User sync trigger
+- `src/app/admin/reports/page.tsx` - Admin report management
+- `src/app/admin/users/page.tsx` - Admin user + access management
+- `src/components/layout/sidebar.tsx` - Sidebar with search + drag & drop
+- `src/stores/report-store.ts` - Report + preferences state
+- `src/lib/api/preferences.ts` - Pin/sortOrder API
+- `supabase/schema.sql` - Database schema + RLS
+- `supabase/user_report_preferences.sql` - User preferences table
 
 ## Data Models
 - Users (id, email, displayName, role, department, isActive)
-- Categories (id, name, description, icon, sortOrder)
-- Reports (id, name, description, embedUrl, categoryId, sortOrder, isActive)
+- Reports (id, name, description, embedUrl, isActive)
 - UserReportAccess (id, userId, reportId, grantedBy, grantedAt)
+- UserReportPreferences (id, userId, reportId, isPinned, sortOrder)
 - ActivityLogs (id, userId, action, entityType, entityId, details)
+
+## Recent Changes (2026-01-26)
+- Removed category system completely
+- Added drag & drop report ordering (@dnd-kit)
+- Added search box in sidebar
+- Pin/unpin reports (personal per user)
+- Custom sort order per user
 
 ## Important Notes
 - Using Toh Framework
 - Memory System is active
 - Pattern E (Corporate/Enterprise) design
 - App REQUIRES Supabase credentials to function
-- Run schema.sql to create database + seed data
-- Run auth-trigger.sql for OAuth user sync
-- Configure Azure AD in Supabase Dashboard for Microsoft login
+- Run user_report_preferences.sql if table doesn't exist
 
 ---
-*Last updated: 2026-01-25*
+*Last updated: 2026-01-26*

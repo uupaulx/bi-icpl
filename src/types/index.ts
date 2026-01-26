@@ -13,7 +13,7 @@ export interface User {
   avatarUrl?: string;
 }
 
-// Category types
+// Category types (kept for DB compatibility)
 export interface Category {
   id: string;
   name: string;
@@ -28,16 +28,16 @@ export interface Report {
   name: string;
   description?: string;
   embedUrl: string;
-  categoryId: string;
+  categoryId: string; // Kept for DB compatibility but not used in UI
   sortOrder: number;
   isActive: boolean;
   createdBy: string;
   createdAt: string;
 }
 
-// Report with category info
+// Report with category info (kept for DB compatibility)
 export interface ReportWithCategory extends Report {
-  category: Category;
+  category?: Category; // Made optional since we don't use categories anymore
 }
 
 // User-Report Access
@@ -49,19 +49,19 @@ export interface UserReportAccess {
   grantedAt: string;
 }
 
-// Menu structure for sidebar
-export interface MenuCategory {
+// User Report Preferences (personal pinned + sort order)
+export interface UserReportPreference {
   id: string;
-  name: string;
-  icon: string;
+  userId: string;
+  reportId: string;
+  isPinned: boolean;
   sortOrder: number;
-  reports: MenuReport[];
 }
 
-export interface MenuReport {
-  id: string;
-  name: string;
-  sortOrder: number;
+// Report with user preferences for display
+export interface ReportWithPreference extends Report {
+  isPinned: boolean;
+  userSortOrder: number; // Personal sort order from drag & drop
 }
 
 // Auth state

@@ -38,14 +38,16 @@ export default function ReportViewerPage() {
   );
 
   useEffect(() => {
-    if (reportId) {
+    if (reportId && user) {
       setCurrentReport(reportId);
+      // Save last viewed report to localStorage
+      localStorage.setItem("lastViewedReportId", reportId);
     }
 
     return () => {
       clearCurrentReport();
     };
-  }, [reportId, setCurrentReport, clearCurrentReport]);
+  }, [reportId, user, setCurrentReport, clearCurrentReport]);
 
   // Handle fullscreen (double-click on iframe container)
   const handleDoubleClick = useCallback(() => {

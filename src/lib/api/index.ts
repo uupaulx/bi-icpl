@@ -33,7 +33,6 @@ export {
 export {
   getAllAccess,
   getUserAccessibleReports,
-  getUserMenuStructure,
   userHasReportAccess,
   getUserReports,
   getReportUsers,
@@ -50,3 +49,12 @@ export {
   ActivityActions,
 } from "./activity";
 export type { ActivityAction } from "./activity";
+
+// Preferences API
+export {
+  getUserPreferences,
+  getReportPreference,
+  togglePinReport,
+  updateReportOrder,
+  getPinnedReportIds,
+} from "./preferences";

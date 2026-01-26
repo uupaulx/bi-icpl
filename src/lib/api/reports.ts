@@ -24,7 +24,7 @@ const transformReport = (dbReport: {
   createdAt: dbReport.created_at,
 });
 
-// Transform database report with category
+// Transform database report with category (category is optional)
 const transformReportWithCategory = (
   dbReport: {
     id: string;
@@ -36,13 +36,13 @@ const transformReportWithCategory = (
     is_active: boolean;
     created_by: string;
     created_at: string;
-    categories: {
+    categories?: {
       id: string;
       name: string;
       description: string | null;
       icon: string;
       sort_order: number;
-    };
+    } | null;
   }
 ): ReportWithCategory => ({
   id: dbReport.id,
@@ -54,13 +54,13 @@ const transformReportWithCategory = (
   isActive: dbReport.is_active,
   createdBy: dbReport.created_by,
   createdAt: dbReport.created_at,
-  category: {
+  category: dbReport.categories ? {
     id: dbReport.categories.id,
     name: dbReport.categories.name,
     description: dbReport.categories.description || undefined,
     icon: dbReport.categories.icon,
     sortOrder: dbReport.categories.sort_order,
-  },
+  } : undefined,
 });
 
 // Get all reports (admin only)
@@ -124,13 +124,13 @@ export async function getReportWithCategory(
     is_active: boolean;
     created_by: string;
     created_at: string;
-    categories: {
+    categories?: {
       id: string;
       name: string;
       description: string | null;
       icon: string;
       sort_order: number;
-    };
+    } | null;
   });
 }
 

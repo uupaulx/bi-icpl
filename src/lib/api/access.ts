@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
-import { UserReportAccess, Report, MenuCategory } from "@/types";
+import { UserReportAccess, Report } from "@/types";
 
 // Transform database access to app UserReportAccess type
 const transformAccess = (dbAccess: {
@@ -42,14 +42,6 @@ type DbReport = {
   is_active: boolean;
   created_by: string;
   created_at: string;
-};
-
-type DbCategory = {
-  id: string;
-  name: string;
-  description: string | null;
-  icon: string;
-  sort_order: number;
 };
 
 // Transform DB report to app Report
@@ -114,53 +106,6 @@ export async function getUserAccessibleReports(
   }
 
   return (reportData as DbReport[]).map(transformDbReport);
-}
-
-// Get menu structure for user
-export async function getUserMenuStructure(
-  userId: string,
-  userRole: string
-): Promise<MenuCategory[]> {
-  // Get accessible reports
-  const reports = await getUserAccessibleReports(userId, userRole);
-
-  // Get all categories
-  const { data: categoriesData, error } = await supabase
-    .from("categories")
-    .select("*")
-    .order("sort_order");
-
-  if (error) {
-    console.error("Error fetching categories:", error);
-    return [];
-  }
-
-  const categories = categoriesData as DbCategory[];
-
-  // Build menu structure
-  const menuCategories: MenuCategory[] = categories
-    .map((cat) => {
-      const categoryReports = reports
-        .filter((r) => r.categoryId === cat.id)
-        .map((r) => ({
-          id: r.id,
-          name: r.name,
-          sortOrder: r.sortOrder,
-        }))
-        .sort((a, b) => a.sortOrder - b.sortOrder);
-
-      return {
-        id: cat.id,
-        name: cat.name,
-        icon: cat.icon,
-        sortOrder: cat.sort_order,
-        reports: categoryReports,
-      };
-    })
-    .filter((cat) => cat.reports.length > 0)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
-
-  return menuCategories;
 }
 
 // Check if user has access to report

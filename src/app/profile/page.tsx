@@ -4,7 +4,6 @@ import { useAuthStore } from "@/stores/auth-store";
 import { useReportStore } from "@/stores/report-store";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -19,7 +18,7 @@ import { useEffect } from "react";
 
 export default function ProfilePage() {
   const { user } = useAuthStore();
-  const { reports, menuStructure, loadUserReports } = useReportStore();
+  const { reports, loadUserReports } = useReportStore();
 
   useEffect(() => {
     if (user) {
@@ -37,6 +36,8 @@ export default function ProfilePage() {
       .toUpperCase()
       .slice(0, 2);
   };
+
+  const activeReports = reports.filter((r) => r.isActive);
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -129,14 +130,7 @@ export default function ProfilePage() {
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 <span>Reports</span>
               </div>
-              <Badge variant="secondary">{reports.length}</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm">
-                <FolderOpen className="h-4 w-4 text-muted-foreground" />
-                <span>หมวดหมู่</span>
-              </div>
-              <Badge variant="secondary">{menuStructure.length}</Badge>
+              <Badge variant="secondary">{activeReports.length}</Badge>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
@@ -162,7 +156,7 @@ export default function ProfilePage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {menuStructure.length === 0 ? (
+          {activeReports.length === 0 ? (
             <div className="py-8 text-center">
               <FolderOpen className="mx-auto h-12 w-12 text-muted-foreground/50" />
               <p className="mt-2 text-sm text-muted-foreground">
@@ -173,24 +167,21 @@ export default function ProfilePage() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {menuStructure.map((category) => (
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {activeReports.map((report) => (
                 <div
-                  key={category.id}
-                  className="rounded-lg border p-4"
+                  key={report.id}
+                  className="rounded-lg border p-3 hover:bg-muted/50 transition-colors"
                 >
-                  <h4 className="font-medium mb-2">{category.name}</h4>
-                  <ul className="space-y-1">
-                    {category.reports.map((report) => (
-                      <li
-                        key={report.id}
-                        className="text-sm text-muted-foreground flex items-center gap-2"
-                      >
-                        <FileText className="h-3 w-3" />
-                        {report.name}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">{report.name}</span>
+                  </div>
+                  {report.description && (
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                      {report.description}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

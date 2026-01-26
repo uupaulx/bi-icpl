@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Report, Category, MenuCategory, ReportWithCategory } from "@/types";
+import { Report, ReportWithCategory, UserReportPreference, ReportWithPreference } from "@/types";
 import {
   getAllReports,
   getReportWithCategory,
@@ -8,71 +8,94 @@ import {
   deleteReport as apiDeleteReport,
 } from "@/lib/api/reports";
 import {
-  getCategories,
-  createCategory as apiCreateCategory,
-  updateCategory as apiUpdateCategory,
-  deleteCategory as apiDeleteCategory,
-} from "@/lib/api/categories";
-import {
   getUserAccessibleReports,
-  getUserMenuStructure,
-  userHasReportAccess,
 } from "@/lib/api/access";
+import {
+  getUserPreferences,
+  togglePinReport as apiTogglePin,
+  updateReportOrder as apiUpdateReportOrder,
+} from "@/lib/api/preferences";
 
 interface ReportState {
   // Data
   reports: Report[];
-  categories: Category[];
-  menuStructure: MenuCategory[];
+  preferences: UserReportPreference[];
   currentReport: ReportWithCategory | null;
 
   // UI State
-  expandedCategories: Set<string>;
   isLoading: boolean;
+
+  // Computed - sorted reports with preferences
+  getSortedReports: () => ReportWithPreference[];
 
   // Actions
   loadUserReports: (userId: string, userRole: string) => Promise<void>;
   loadAllReports: () => Promise<void>;
-  loadAllCategories: () => Promise<void>;
+  loadPreferences: (userId: string) => Promise<void>;
   setCurrentReport: (reportId: string) => Promise<void>;
   clearCurrentReport: () => void;
-  toggleCategory: (categoryId: string) => void;
   checkReportAccess: (userId: string, userRole: string, reportId: string) => Promise<boolean>;
+
+  // Preference actions
+  togglePin: (userId: string, reportId: string) => Promise<void>;
+  reorderReports: (userId: string, reportIds: string[]) => Promise<void>;
 
   // Admin actions
   createReport: (report: Omit<Report, "id" | "createdAt">) => Promise<void>;
   updateReport: (id: string, updates: Partial<Report>) => Promise<void>;
   deleteReport: (id: string) => Promise<void>;
-  createCategory: (category: Omit<Category, "id">) => Promise<void>;
-  updateCategory: (id: string, updates: Partial<Category>) => Promise<void>;
-  deleteCategory: (id: string) => Promise<void>;
 }
 
 export const useReportStore = create<ReportState>((set, get) => ({
   reports: [],
-  categories: [],
-  menuStructure: [],
+  preferences: [],
   currentReport: null,
-  expandedCategories: new Set<string>(),
   isLoading: false,
+
+  // Get reports sorted by: 1) Pinned first, 2) Then by user sortOrder, 3) Then alphabetically
+  getSortedReports: () => {
+    const { reports, preferences } = get();
+
+    // Map reports with their preferences
+    const reportsWithPrefs: ReportWithPreference[] = reports
+      .filter((r) => r.isActive)
+      .map((report) => {
+        const pref = preferences.find((p) => p.reportId === report.id);
+        return {
+          ...report,
+          isPinned: pref?.isPinned ?? false,
+          userSortOrder: pref?.sortOrder ?? 999999, // High number for unsorted reports
+        };
+      });
+
+    // Sort: pinned first, then by userSortOrder, then alphabetically
+    return reportsWithPrefs.sort((a, b) => {
+      // Pinned reports first
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+
+      // Then by userSortOrder (lower = higher priority)
+      if (a.userSortOrder !== b.userSortOrder) {
+        return a.userSortOrder - b.userSortOrder;
+      }
+
+      // Finally alphabetically (Thai ก-ฮ, then English a-z)
+      return a.name.localeCompare(b.name, "th");
+    });
+  },
 
   loadUserReports: async (userId, userRole) => {
     set({ isLoading: true });
 
     try {
-      const accessibleReports = await getUserAccessibleReports(userId, userRole);
-      const menuStructure = await getUserMenuStructure(userId, userRole);
-
-      // Auto-expand first category
-      const firstCategoryId = menuStructure[0]?.id;
-      const expandedCategories = firstCategoryId
-        ? new Set([firstCategoryId])
-        : new Set<string>();
+      const [accessibleReports, userPreferences] = await Promise.all([
+        getUserAccessibleReports(userId, userRole),
+        getUserPreferences(userId),
+      ]);
 
       set({
         reports: accessibleReports,
-        menuStructure,
-        expandedCategories,
+        preferences: userPreferences,
         isLoading: false,
       });
     } catch (error) {
@@ -90,12 +113,12 @@ export const useReportStore = create<ReportState>((set, get) => ({
     }
   },
 
-  loadAllCategories: async () => {
+  loadPreferences: async (userId) => {
     try {
-      const categories = await getCategories();
-      set({ categories });
+      const preferences = await getUserPreferences(userId);
+      set({ preferences });
     } catch (error) {
-      console.error("Error loading categories:", error);
+      console.error("Error loading preferences:", error);
     }
   },
 
@@ -103,16 +126,6 @@ export const useReportStore = create<ReportState>((set, get) => ({
     try {
       const report = await getReportWithCategory(reportId);
       set({ currentReport: report });
-
-      // Auto-expand the category of the current report
-      if (report) {
-        const { expandedCategories } = get();
-        if (!expandedCategories.has(report.categoryId)) {
-          set({
-            expandedCategories: new Set([...expandedCategories, report.categoryId]),
-          });
-        }
-      }
     } catch (error) {
       console.error("Error setting current report:", error);
     }
@@ -122,21 +135,88 @@ export const useReportStore = create<ReportState>((set, get) => ({
     set({ currentReport: null });
   },
 
-  toggleCategory: (categoryId) => {
-    const { expandedCategories } = get();
-    const newExpanded = new Set(expandedCategories);
-
-    if (newExpanded.has(categoryId)) {
-      newExpanded.delete(categoryId);
-    } else {
-      newExpanded.add(categoryId);
-    }
-
-    set({ expandedCategories: newExpanded });
+  checkReportAccess: async (userId, userRole, reportId) => {
+    const { userHasReportAccess } = await import("@/lib/api/access");
+    return await userHasReportAccess(userId, userRole, reportId);
   },
 
-  checkReportAccess: async (userId, userRole, reportId) => {
-    return await userHasReportAccess(userId, userRole, reportId);
+  // Toggle pin status
+  togglePin: async (userId, reportId) => {
+    const success = await apiTogglePin(userId, reportId);
+    if (success) {
+      // Update local state optimistically
+      set((state) => {
+        const existingPref = state.preferences.find(
+          (p) => p.reportId === reportId
+        );
+
+        if (existingPref) {
+          return {
+            preferences: state.preferences.map((p) =>
+              p.reportId === reportId
+                ? { ...p, isPinned: !p.isPinned }
+                : p
+            ),
+          };
+        } else {
+          // Create new preference entry
+          return {
+            preferences: [
+              ...state.preferences,
+              {
+                id: `temp-${reportId}`,
+                userId,
+                reportId,
+                isPinned: true,
+                sortOrder: 0,
+              },
+            ],
+          };
+        }
+      });
+    }
+  },
+
+  // Reorder reports (after drag & drop)
+  reorderReports: async (userId, reportIds) => {
+    // Build order data - index becomes the sort order
+    const reportOrders = reportIds.map((reportId, index) => ({
+      reportId,
+      sortOrder: index,
+    }));
+
+    // Optimistically update local state
+    set((state) => {
+      const newPreferences = [...state.preferences];
+
+      reportOrders.forEach(({ reportId, sortOrder }) => {
+        const existingIndex = newPreferences.findIndex((p) => p.reportId === reportId);
+
+        if (existingIndex >= 0) {
+          newPreferences[existingIndex] = {
+            ...newPreferences[existingIndex],
+            sortOrder,
+          };
+        } else {
+          newPreferences.push({
+            id: `temp-${reportId}`,
+            userId,
+            reportId,
+            isPinned: false,
+            sortOrder,
+          });
+        }
+      });
+
+      return { preferences: newPreferences };
+    });
+
+    // Save to database
+    const success = await apiUpdateReportOrder(userId, reportOrders);
+    if (!success) {
+      // Reload preferences on failure
+      get().loadPreferences(userId);
+    }
   },
 
   // Admin actions
@@ -171,46 +251,5 @@ export const useReportStore = create<ReportState>((set, get) => ({
     set((state) => ({
       reports: state.reports.filter((r) => r.id !== id),
     }));
-  },
-
-  createCategory: async (categoryData) => {
-    try {
-      const newCategory = await apiCreateCategory(categoryData);
-      if (newCategory) {
-        set((state) => ({
-          categories: [...state.categories, newCategory],
-        }));
-      }
-    } catch (error) {
-      console.error("Error creating category:", error);
-    }
-  },
-
-  updateCategory: async (id, updates) => {
-    try {
-      const success = await apiUpdateCategory(id, updates);
-      if (success) {
-        set((state) => ({
-          categories: state.categories.map((c) =>
-            c.id === id ? { ...c, ...updates } : c
-          ),
-        }));
-      }
-    } catch (error) {
-      console.error("Error updating category:", error);
-    }
-  },
-
-  deleteCategory: async (id) => {
-    try {
-      const success = await apiDeleteCategory(id);
-      if (success) {
-        set((state) => ({
-          categories: state.categories.filter((c) => c.id !== id),
-        }));
-      }
-    } catch (error) {
-      console.error("Error deleting category:", error);
-    }
   },
 }));
