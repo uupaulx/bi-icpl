@@ -48,7 +48,7 @@ export default function AdminReportsPage() {
   const router = useRouter();
   const { user } = useAuthStore();
   const {
-    reports,
+    allReports,
     loadAllReports,
     createReport,
     updateReport,
@@ -77,8 +77,8 @@ export default function AdminReportsPage() {
     loadAllReports();
   }, [user, router, loadAllReports]);
 
-  // Sort reports by name for admin view
-  const filteredReports = reports
+  // Sort reports by name for admin view (use allReports, not user's reports)
+  const filteredReports = allReports
     .filter(
       (r) =>
         r.name.toLowerCase().includes(search.toLowerCase()) ||

@@ -17,8 +17,9 @@ import {
 } from "@/lib/api/preferences";
 
 interface ReportState {
-  // Data
-  reports: Report[];
+  // Data - SEPARATED: userReports for sidebar, allReports for admin
+  reports: Report[]; // User's accessible reports (for sidebar)
+  allReports: Report[]; // All reports (for admin management only)
   preferences: UserReportPreference[];
   currentReport: ReportWithCategory | null;
 
@@ -47,7 +48,8 @@ interface ReportState {
 }
 
 export const useReportStore = create<ReportState>((set, get) => ({
-  reports: [],
+  reports: [], // User's accessible reports (for sidebar)
+  allReports: [], // All reports (for admin management only)
   preferences: [],
   currentReport: null,
   isLoading: false,
@@ -106,8 +108,8 @@ export const useReportStore = create<ReportState>((set, get) => ({
 
   loadAllReports: async () => {
     try {
-      const reports = await getAllReports();
-      set({ reports });
+      const allReports = await getAllReports();
+      set({ allReports }); // Write to allReports, not reports (to not affect sidebar)
     } catch (error) {
       console.error("Error loading all reports:", error);
     }
@@ -219,14 +221,14 @@ export const useReportStore = create<ReportState>((set, get) => ({
     }
   },
 
-  // Admin actions
+  // Admin actions - update allReports (admin management list)
   createReport: async (reportData) => {
     const newReport = await apiCreateReport(reportData);
     if (!newReport) {
       throw new Error("Failed to create report");
     }
     set((state) => ({
-      reports: [...state.reports, newReport],
+      allReports: [...state.allReports, newReport],
     }));
   },
 
@@ -236,6 +238,10 @@ export const useReportStore = create<ReportState>((set, get) => ({
       throw new Error("Failed to update report");
     }
     set((state) => ({
+      allReports: state.allReports.map((r) =>
+        r.id === id ? { ...r, ...updates } : r
+      ),
+      // Also update in reports if it exists there
       reports: state.reports.map((r) =>
         r.id === id ? { ...r, ...updates } : r
       ),
@@ -247,8 +253,9 @@ export const useReportStore = create<ReportState>((set, get) => ({
     if (!success) {
       throw new Error("Failed to delete report");
     }
-    // Remove from list
+    // Remove from both lists
     set((state) => ({
+      allReports: state.allReports.filter((r) => r.id !== id),
       reports: state.reports.filter((r) => r.id !== id),
     }));
   },

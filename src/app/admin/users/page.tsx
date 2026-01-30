@@ -60,7 +60,7 @@ type ViewMode = "cards" | "matrix";
 export default function AdminUsersPage() {
   const router = useRouter();
   const { user: currentUser } = useAuthStore();
-  const { reports, loadAllReports } = useReportStore();
+  const { allReports, loadAllReports } = useReportStore();
   const {
     users,
     userReportAccess,
@@ -111,7 +111,7 @@ export default function AdminUsersPage() {
     }
   }, [users, loadUserReportData]);
 
-  const activeReports = useMemo(() => reports.filter((r) => r.isActive), [reports]);
+  const activeReports = useMemo(() => allReports.filter((r) => r.isActive), [allReports]);
 
   const filteredUsers = useMemo(() => {
     return users.filter((u) => {
