@@ -88,10 +88,9 @@ export default function AdminUsersPage() {
   const loadUserReportData = useCallback(async () => {
     const data: Record<string, string[]> = {};
     for (const user of users) {
-      if (user.role !== "admin") {
-        const userReports = await getUserReports(user.id);
-        data[user.id] = userReports;
-      }
+      // Load access data for ALL users including Admin
+      const userReports = await getUserReports(user.id);
+      data[user.id] = userReports;
     }
     setUserReportCounts(data);
   }, [users, getUserReports]);
@@ -278,7 +277,7 @@ export default function AdminUsersPage() {
             const isCurrentUser = user.id === currentUser.id;
             const isAdmin = user.role === "admin";
             const accessedReports = getUserAccessedReports(user.id);
-            const reportCount = isAdmin ? activeReports.length : accessedReports.length;
+            const reportCount = accessedReports.length; // Same logic for both Admin and User now
 
             return (
               <Card key={user.id} className={cn(!user.isActive && "opacity-60")}>
@@ -345,38 +344,36 @@ export default function AdminUsersPage() {
 
                     <Badge variant={isAdmin ? "default" : "secondary"} className="gap-1">
                       <FileText className="h-3 w-3" />
-                      {isAdmin ? "ทั้งหมด" : `${reportCount} reports`}
+                      {reportCount} reports
                     </Badge>
                   </div>
 
-                  {/* Report Badges */}
-                  {!isAdmin && (
-                    <div className="mb-4">
-                      <div className="flex flex-wrap gap-1">
-                        {accessedReports.slice(0, 3).map((report) => (
-                          <Badge
-                            key={report.id}
-                            variant="outline"
-                            className="text-xs font-normal"
-                          >
-                            {report.name.length > 15
-                              ? report.name.slice(0, 15) + "..."
-                              : report.name}
-                          </Badge>
-                        ))}
-                        {accessedReports.length > 3 && (
-                          <Badge variant="outline" className="text-xs font-normal">
-                            +{accessedReports.length - 3}
-                          </Badge>
-                        )}
-                        {accessedReports.length === 0 && (
-                          <span className="text-xs text-muted-foreground">
-                            ยังไม่มีสิทธิ์เข้าถึง Report
-                          </span>
-                        )}
-                      </div>
+                  {/* Report Badges - Show for ALL users including Admin */}
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-1">
+                      {accessedReports.slice(0, 3).map((report) => (
+                        <Badge
+                          key={report.id}
+                          variant="outline"
+                          className="text-xs font-normal"
+                        >
+                          {report.name.length > 15
+                            ? report.name.slice(0, 15) + "..."
+                            : report.name}
+                        </Badge>
+                      ))}
+                      {accessedReports.length > 3 && (
+                        <Badge variant="outline" className="text-xs font-normal">
+                          +{accessedReports.length - 3}
+                        </Badge>
+                      )}
+                      {accessedReports.length === 0 && (
+                        <span className="text-xs text-muted-foreground">
+                          ยังไม่มีสิทธิ์เข้าถึง Report
+                        </span>
+                      )}
                     </div>
-                  )}
+                  </div>
 
                   {/* Last Login */}
                   <div className="text-xs text-muted-foreground mb-4">
@@ -384,18 +381,16 @@ export default function AdminUsersPage() {
                     {user.lastLogin ? formatDateTime(user.lastLogin) : "ยังไม่เคยเข้าใช้"}
                   </div>
 
-                  {/* Action Button */}
-                  {!isAdmin && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full gap-2"
-                      onClick={() => openAccessSheet(user)}
-                    >
-                      <Settings2 className="h-4 w-4" />
-                      จัดการสิทธิ์
-                    </Button>
-                  )}
+                  {/* Action Button - Show for ALL users including Admin */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full gap-2"
+                    onClick={() => openAccessSheet(user)}
+                  >
+                    <Settings2 className="h-4 w-4" />
+                    จัดการสิทธิ์
+                  </Button>
                 </CardContent>
               </Card>
             );
