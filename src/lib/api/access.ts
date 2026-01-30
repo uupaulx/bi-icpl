@@ -57,28 +57,15 @@ const transformDbReport = (r: DbReport): Report => ({
   createdAt: r.created_at,
 });
 
-// Get user's accessible reports
+// Get user's accessible reports (both Admin and User use same logic now)
+// Admin manages all reports in admin page, but sees only granted reports in sidebar
 export async function getUserAccessibleReports(
   userId: string,
-  userRole: string
+  _userRole: string // kept for compatibility but not used anymore
 ): Promise<Report[]> {
-  // Admin can access all active reports
-  if (userRole === "admin") {
-    const { data, error } = await supabase
-      .from("reports")
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order");
+  // All users (including Admin) only see reports they have access to
+  // Admin can manage all reports in /admin/reports page separately
 
-    if (error) {
-      console.error("Error fetching reports for admin:", error);
-      return [];
-    }
-
-    return (data as DbReport[]).map(transformDbReport);
-  }
-
-  // Regular users only see reports they have access to
   // First get the report IDs the user has access to
   const { data: accessData, error: accessError } = await supabase
     .from("user_report_access")
@@ -108,16 +95,14 @@ export async function getUserAccessibleReports(
   return (reportData as DbReport[]).map(transformDbReport);
 }
 
-// Check if user has access to report
+// Check if user has access to report (Admin and User use same logic)
 export async function userHasReportAccess(
   userId: string,
-  userRole: string,
+  _userRole: string, // kept for compatibility but not used anymore
   reportId: string
 ): Promise<boolean> {
-  // Admin has access to all reports
-  if (userRole === "admin") {
-    return true;
-  }
+  // All users (including Admin) must have explicit access to view reports
+  // Admin can manage reports in admin pages, but must grant themselves access to view
 
   const { data, error } = await supabase
     .from("user_report_access")

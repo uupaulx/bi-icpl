@@ -63,8 +63,8 @@ export default function ReportViewerPage() {
 
   if (!user) return null;
 
-  // Access denied
-  if (!hasAccess && user.role !== "admin") {
+  // Access denied (applies to both Admin and User now)
+  if (!hasAccess) {
     return (
       <div className="flex flex-col items-center justify-center h-full space-y-4">
         <AlertTriangle className="h-16 w-16 text-destructive" />
