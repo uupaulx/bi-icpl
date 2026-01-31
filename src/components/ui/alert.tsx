@@ -1,16 +1,31 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-
 import { cn } from "@/lib/utils"
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
+  "relative w-full rounded-[10px] border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4",
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground",
+        default: "bg-background text-foreground [&>svg]:text-foreground",
+
+        // Danger/Destructive (Red)
         destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+          "border-destructive/50 bg-[hsl(var(--color-red-50))] text-destructive [&>svg]:text-destructive",
+        danger:
+          "border-destructive/50 bg-[hsl(var(--color-red-50))] text-destructive [&>svg]:text-destructive",
+
+        // Success (Green)
+        success:
+          "border-[hsl(var(--success))]/50 bg-[hsl(var(--color-green-50))] text-[hsl(var(--success))] [&>svg]:text-[hsl(var(--success))]",
+
+        // Warning (Yellow)
+        warning:
+          "border-[hsl(var(--warning))]/50 bg-[hsl(var(--color-yellow-50))] text-[hsl(var(--warning))] [&>svg]:text-[hsl(var(--warning))]",
+
+        // Info (Primary Blue)
+        info:
+          "border-primary/50 bg-[hsl(var(--color-primary-50))] text-primary [&>svg]:text-primary",
       },
     },
     defaultVariants: {
@@ -38,7 +53,7 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    className={cn("mb-1 font-semibold leading-none tracking-tight", className)}
     {...props}
   />
 ))

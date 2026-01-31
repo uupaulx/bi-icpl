@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,37 +6,65 @@
 
 @layer base {
   :root {
-    /* ICPL Corporate Identity Colors */
-    --background: 210 20% 98%;
-    --foreground: 220 13% 13%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 13% 13%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 13%;
+    /* ========================================
+       ICP Design System - Design Tokens
+       Based on: Daya UI Kit + ICPL Brand
+       Primary: Pantone 286 C (#004F9F)
+       ======================================== */
 
-    /* Primary: ICPL Blue #004F9F */
+    /* Background & Foreground */
+    --background: 0 0% 100%;
+    --foreground: 220 17% 10%;
+
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 220 17% 10%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 17% 10%;
+
+    /* Primary: ICPL Blue - Pantone 286 C (#004F9F) */
     --primary: 209 100% 31%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: ICPL Green #28A745 */
-    --secondary: 134 61% 41%;
+    /* Secondary: Cyan/Teal (#33BDC1) */
+    --secondary: 182 57% 48%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 20% 96%;
+    /* Muted */
+    --muted: 220 14% 96%;
     --muted-foreground: 220 9% 46%;
 
-    /* Accent: ICPL Yellow #FFC107 */
-    --accent: 45 100% 51%;
-    --accent-foreground: 220 13% 13%;
+    /* Accent */
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 17% 10%;
 
-    --destructive: 354 70% 54%;
+    /* Destructive / Danger (#E3562B) */
+    --destructive: 15 76% 53%;
     --destructive-foreground: 0 0% 100%;
+
+    /* Success (#1DAF55) */
+    --success: 145 71% 40%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning (#F5C518) */
+    --warning: 47 92% 52%;
+    --warning-foreground: 220 17% 10%;
+
+    /* Border & Input */
     --border: 220 13% 91%;
     --input: 220 13% 91%;
     --ring: 209 100% 31%;
-    --radius: 0.375rem;
 
-    /* ICPL Extended Colors */
+    /* Radius - ICP Design System uses 10px */
+    --radius: 0.625rem;
+
+    /* ========================================
+       Extended Color Palette
+       ======================================== */
+
+    /* Primary Scale (Blue - Pantone 286 C) */
     --color-primary-50: 209 100% 96%;
     --color-primary-100: 209 100% 90%;
     --color-primary-200: 209 100% 80%;
@@ -47,6 +75,58 @@
     --color-primary-700: 209 100% 19%;
     --color-primary-800: 209 100% 13%;
     --color-primary-900: 209 100% 6%;
+
+    /* Cyan/Secondary Scale */
+    --color-cyan-50: 180 60% 96%;
+    --color-cyan-100: 180 55% 90%;
+    --color-cyan-200: 180 55% 80%;
+    --color-cyan-300: 180 55% 70%;
+    --color-cyan-400: 180 55% 60%;
+    --color-cyan-500: 182 57% 48%;
+    --color-cyan-600: 182 57% 38%;
+    --color-cyan-700: 182 57% 28%;
+
+    /* Grey Scale */
+    --color-grey-50: 220 14% 96%;
+    --color-grey-100: 220 13% 91%;
+    --color-grey-200: 220 12% 84%;
+    --color-grey-300: 220 11% 75%;
+    --color-grey-400: 220 10% 60%;
+    --color-grey-500: 220 9% 46%;
+    --color-grey-600: 220 10% 36%;
+    --color-grey-700: 220 11% 26%;
+    --color-grey-800: 220 12% 18%;
+    --color-grey-900: 220 14% 10%;
+
+    /* Black Scale */
+    --color-black-50: 220 5% 91%;
+    --color-black-100: 220 5% 83%;
+    --color-black-200: 220 6% 65%;
+    --color-black-300: 220 7% 47%;
+    --color-black-400: 220 9% 30%;
+    --color-black-500: 220 17% 10%;
+
+    /* Semantic Colors */
+    --color-red-50: 15 76% 96%;
+    --color-red-100: 15 76% 90%;
+    --color-red-500: 15 76% 53%;
+    --color-red-600: 15 76% 43%;
+
+    --color-green-50: 145 50% 96%;
+    --color-green-100: 145 50% 90%;
+    --color-green-500: 145 71% 40%;
+    --color-green-600: 145 71% 32%;
+
+    --color-yellow-50: 47 92% 96%;
+    --color-yellow-100: 47 92% 85%;
+    --color-yellow-500: 47 92% 52%;
+    --color-yellow-600: 47 92% 42%;
+
+    --color-orange-50: 30 95% 96%;
+    --color-orange-500: 30 95% 46%;
+
+    --color-purple-50: 258 90% 96%;
+    --color-purple-500: 258 90% 66%;
   }
 }
 
@@ -56,7 +136,14 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Noto Sans Thai', sans-serif;
+    font-family: 'Public Sans', 'Noto Sans Thai', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -87,4 +174,22 @@
 
 :fullscreen iframe {
   border-radius: 0 !important;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition-property: background-color, border-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* Disable transitions on page load */
+.no-transitions * {
+  transition: none !important;
 }
