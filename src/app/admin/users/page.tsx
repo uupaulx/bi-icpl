@@ -515,10 +515,6 @@ export default function AdminUsersPage() {
                 <X className="h-4 w-4 text-muted-foreground/30" />
                 <span>ไม่มีสิทธิ์</span>
               </div>
-              <div className="flex items-center gap-1">
-                <Shield className="h-4 w-4 text-primary" />
-                <span>Admin มีสิทธิ์ทั้งหมดโดยอัตโนมัติ</span>
-              </div>
             </div>
           </CardContent>
         </Card>
