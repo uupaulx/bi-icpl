@@ -396,7 +396,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
                     </h4>
                   </div>
                 )}
-                <Tooltip>
+                <Tooltip open={isExpanded ? false : undefined}>
                   <TooltipTrigger asChild>
                     <Link href="/admin/reports">
                       <Button
@@ -411,9 +411,9 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
                       </Button>
                     </Link>
                   </TooltipTrigger>
-                  {!isExpanded && <TooltipContent side="right">จัดการ Reports</TooltipContent>}
+                  <TooltipContent side="right">จัดการ Reports</TooltipContent>
                 </Tooltip>
-                <Tooltip>
+                <Tooltip open={isExpanded ? false : undefined}>
                   <TooltipTrigger asChild>
                     <Link href="/admin/users">
                       <Button
@@ -428,7 +428,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
                       </Button>
                     </Link>
                   </TooltipTrigger>
-                  {!isExpanded && <TooltipContent side="right">จัดการผู้ใช้และสิทธิ์</TooltipContent>}
+                  <TooltipContent side="right">จัดการผู้ใช้และสิทธิ์</TooltipContent>
                 </Tooltip>
               </>
             )}
