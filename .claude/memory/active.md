@@ -1,51 +1,42 @@
 # 🔥 Active Task
 
 ## Current Focus
-Admin Users Page Redesign - Completed!
+UI/UX Bug Fixes after ICP Design System Migration - Completed!
 
 ## Status
-✅ **Completed** - Unified Access Manager with User Cards + Slide-over + Matrix
+✅ **Completed** - All 9 UI/UX bugs fixed, build passes
 
 ## Just Completed
-- [x] Hover-to-expand sidebar (when collapsed, hover to expand temporarily)
-- [x] Last viewed report feature (remember and redirect on return)
-- [x] Admin Users page redesigned with new UX
-  - User Cards view with report badges
-  - Slide-over panel for access management
-  - Matrix view as secondary option
-  - Select All toggle in sheet
-  - Visual feedback (green highlight for access)
+- [x] ICP Design System integration (Phase 1 & 2) - commit 52be4a0
+- [x] Removed outdated Admin auto-access legend - commit e98f739
+- [x] UI/UX bug sweep - 9 bugs found and fixed:
+  1. tailwind.config.ts: Font family now "Public Sans" first (was "Noto Sans Thai" only)
+  2. tailwind.config.ts: Semantic colors now use hsl(var()) instead of hardcoded hex
+  3. Login page: Replaced hardcoded #004F9F with text-primary
+  4. Login page: Gradient uses design tokens, skeleton uses rounded-lg
+  5. Admin reports: Info banner uses ICP primary tokens (was blue-50/200/600/800)
+  6. Admin users: Access highlights use ICP success tokens (was green-50/200/600)
+  7. Sidebar + Header: bg-background instead of bg-white
+  8. Textarea: rounded-[10px] to match ICP design system
+  9. globals.css: Scoped transitions to interactive elements only
+  10. Profile page: Removed outdated "Admin sees all reports" description
 
 ## Files Modified (this session)
 | File | Change |
 |------|--------|
-| src/components/layout/sidebar.tsx | Added isHovered state, hover-to-expand |
-| src/app/reports/[id]/page.tsx | Save lastViewedReportId to localStorage |
-| src/app/page.tsx | Redirect to last viewed report if exists |
-| src/components/ui/sheet.tsx | New Sheet component for slide-over panel |
-| src/app/admin/users/page.tsx | Complete redesign with cards + matrix views |
-
-## New Features
-
-### Hover-to-Expand Sidebar
-- When sidebar is collapsed, hovering expands it temporarily
-- Shows full report names without needing tooltips
-- Shadow effect when hovering on collapsed state
-
-### Last Viewed Report
-- Saves last viewed report ID to localStorage
-- On return, redirects to last viewed report if user still has access
-- Falls back to first available report if access revoked
-
-### Unified Access Manager (Admin Users Page)
-- Two view modes: "ดูตามผู้ใช้" (Cards) and "ดูตาราง" (Matrix)
-- User cards show: avatar, name, email, department, role, status, report badges
-- Click "จัดการสิทธิ์" opens slide-over with report checkboxes
-- Matrix view shows users × reports grid with click-to-toggle
-- Search/filter in both views
+| tailwind.config.ts | Fixed font family + semantic colors |
+| src/app/login/page.tsx | Design tokens for colors/gradient/skeleton |
+| src/app/admin/reports/page.tsx | ICP primary tokens for info banner |
+| src/app/admin/users/page.tsx | ICP success tokens for access UI |
+| src/components/layout/sidebar.tsx | bg-background instead of bg-white |
+| src/components/layout/header.tsx | bg-background instead of bg-white |
+| src/components/ui/textarea.tsx | rounded-[10px] ICP radius |
+| src/app/globals.css | Scoped transitions to interactive elements |
+| src/app/profile/page.tsx | Fixed admin description text |
 
 ## Next Steps
-- Test all new features at http://localhost:3001
+- Microsoft OAuth integration (Azure AD + Supabase Auth)
+- ICP Design System Phase 3+ (remaining component updates)
 
 ---
-*Last updated: 2026-01-26*
+*Last updated: 2026-02-22*

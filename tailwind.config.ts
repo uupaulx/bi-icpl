@@ -57,15 +57,15 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // ICPL Semantic Colors
-        success: "#28A745",
-        warning: "#FFC107",
-        error: "#DC3545",
-        info: "#17A2B8",
+        // ICPL Semantic Colors (aligned with CSS variables)
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        error: "hsl(var(--destructive))",
+        info: "hsl(var(--primary))",
       },
       fontFamily: {
-        sans: ["Noto Sans Thai", "sans-serif"],
-        primary: ["Noto Sans Thai", "sans-serif"],
+        sans: ["Public Sans", "Noto Sans Thai", "sans-serif"],
+        primary: ["Public Sans", "Noto Sans Thai", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",

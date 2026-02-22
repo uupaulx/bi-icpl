@@ -150,9 +150,7 @@ export default function ProfilePage() {
         <CardHeader>
           <CardTitle>Reports ที่เข้าถึงได้</CardTitle>
           <CardDescription>
-            {user.role === "admin"
-              ? "ในฐานะ Admin คุณสามารถเข้าถึง Reports ทั้งหมดในระบบ"
-              : "รายการ Reports ที่คุณได้รับสิทธิ์ในการเข้าถึง"}
+            รายการ Reports ที่คุณได้รับสิทธิ์ในการเข้าถึง
           </CardDescription>
         </CardHeader>
         <CardContent>

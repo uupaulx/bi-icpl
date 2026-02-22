@@ -482,7 +482,7 @@ export default function AdminUsersPage() {
                             onClick={() => handleToggleAccess(user.id, report.id)}
                           >
                             {hasAccess ? (
-                              <Check className="h-5 w-5 text-green-600 mx-auto" />
+                              <Check className="h-5 w-5 text-[hsl(var(--success))] mx-auto" />
                             ) : (
                               <X className="h-5 w-5 text-muted-foreground/20 mx-auto" />
                             )}
@@ -508,7 +508,7 @@ export default function AdminUsersPage() {
             {/* Legend */}
             <div className="mt-4 flex items-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
-                <Check className="h-4 w-4 text-green-600" />
+                <Check className="h-4 w-4 text-[hsl(var(--success))]" />
                 <span>มีสิทธิ์</span>
               </div>
               <div className="flex items-center gap-1">
@@ -569,7 +569,7 @@ export default function AdminUsersPage() {
                         className={cn(
                           "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
                           hasAccess
-                            ? "bg-green-50 border-green-200"
+                            ? "bg-[hsl(var(--color-green-50))] border-[hsl(var(--success))]/20"
                             : "hover:bg-muted"
                         )}
                         onClick={() =>
@@ -593,7 +593,7 @@ export default function AdminUsersPage() {
                           )}
                         </div>
                         {hasAccess && (
-                          <Check className="h-4 w-4 text-green-600 shrink-0" />
+                          <Check className="h-4 w-4 text-[hsl(var(--success))] shrink-0" />
                         )}
                       </div>
                     );

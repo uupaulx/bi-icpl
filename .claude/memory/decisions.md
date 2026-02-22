@@ -62,5 +62,12 @@
 | 2026-01-25 | Remove all mock fallbacks | App requires real Supabase |
 | 2026-01-25 | Async store methods | API calls are async |
 
+| 2026-02-22 | ICP Design System Option B | Keep stack (Next 14, React 18, Tailwind v3), adopt design tokens only |
+| 2026-02-22 | Public Sans as primary font | ICP CI spec, Noto Sans Thai as fallback |
+| 2026-02-22 | Use CSS variables for semantic colors | hsl(var(--success)) instead of hardcoded hex |
+| 2026-02-22 | bg-background over bg-white | Theme consistency, use design tokens everywhere |
+| 2026-02-22 | Scope transitions to interactive elements | Global * transition caused performance issues |
+| 2026-02-22 | Admin same access text as User | Admin requires explicit access like regular users |
+
 ---
-*Last updated: 2026-01-25*
+*Last updated: 2026-02-22*

@@ -182,14 +182,9 @@
   outline-offset: 2px;
 }
 
-/* Smooth transitions for theme changes */
-* {
-  transition-property: background-color, border-color;
+/* Smooth transitions for interactive elements */
+button, a, input, select, textarea, [role="button"] {
+  transition-property: background-color, border-color, color, box-shadow;
   transition-duration: 150ms;
   transition-timing-function: ease;
-}
-
-/* Disable transitions on page load */
-.no-transitions * {
-  transition: none !important;
 }

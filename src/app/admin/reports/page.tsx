@@ -240,13 +240,13 @@ export default function AdminReportsPage() {
         </div>
 
         {/* Info banner about sorting */}
-        <Card className="bg-blue-50 border-blue-200">
+        <Card className="bg-[hsl(var(--color-primary-50))] border-primary/20">
           <CardContent className="pt-4 pb-4">
             <div className="flex items-start gap-3">
-              <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-800">
+              <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div className="text-sm text-primary">
                 <p className="font-medium">ระบบเรียงลำดับอัตโนมัติ</p>
-                <p className="text-blue-600">
+                <p className="text-primary/80">
                   Reports จะเรียงตามความถี่การใช้งานของแต่ละผู้ใช้
                   และผู้ใช้สามารถปักหมุด Report ที่ใช้บ่อยไว้ด้านบนได้เอง
                 </p>

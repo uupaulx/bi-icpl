@@ -253,7 +253,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
     <TooltipProvider delayDuration={0}>
       <aside
         className={cn(
-          "fixed left-0 top-12 z-30 hidden h-[calc(100vh-3rem)] shrink-0 border-r bg-white md:block transition-all duration-300",
+          "fixed left-0 top-12 z-30 hidden h-[calc(100vh-3rem)] shrink-0 border-r bg-background md:block transition-all duration-300",
           // Width based on expanded state (not just collapsed)
           isExpanded ? "w-64" : "w-16",
           // Add shadow when hovering on collapsed sidebar for visual feedback
@@ -267,7 +267,7 @@ export function Sidebar({ collapsed = false }: SidebarProps) {
           <Button
             variant="outline"
             size="icon"
-            className="h-6 w-6 rounded-full border bg-white shadow-md hover:bg-muted"
+            className="h-6 w-6 rounded-full border bg-background shadow-md hover:bg-muted"
             onClick={toggleSidebar}
           >
             {collapsed ? (

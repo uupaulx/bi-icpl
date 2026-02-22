@@ -56,7 +56,7 @@ function LoginContent() {
           />
         </div>
         <div>
-          <CardTitle className="text-2xl font-bold text-[#004F9F]">
+          <CardTitle className="text-2xl font-bold text-primary">
             ICPL × BI Report
           </CardTitle>
           <CardDescription className="mt-2">
@@ -121,15 +121,15 @@ function LoginFallback() {
   return (
     <Card className="w-full max-w-md shadow-lg">
       <CardHeader className="text-center space-y-6 pb-2">
-        <div className="mx-auto h-14 w-[180px] bg-muted animate-pulse rounded" />
+        <div className="mx-auto h-14 w-[180px] bg-muted animate-pulse rounded-lg" />
         <div>
-          <div className="h-8 bg-muted animate-pulse rounded w-48 mx-auto" />
-          <div className="h-4 bg-muted animate-pulse rounded w-64 mx-auto mt-2" />
+          <div className="h-8 bg-muted animate-pulse rounded-lg w-48 mx-auto" />
+          <div className="h-4 bg-muted animate-pulse rounded-lg w-64 mx-auto mt-2" />
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="h-12 bg-muted animate-pulse rounded" />
-        <div className="h-4 bg-muted animate-pulse rounded w-48 mx-auto" />
+        <div className="h-12 bg-muted animate-pulse rounded-lg" />
+        <div className="h-4 bg-muted animate-pulse rounded-lg w-48 mx-auto" />
       </CardContent>
     </Card>
   );
@@ -137,7 +137,7 @@ function LoginFallback() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E6EEF7] to-[#CCE0F0] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[hsl(var(--color-primary-50))] to-[hsl(var(--color-primary-100))] p-4">
       <Suspense fallback={<LoginFallback />}>
         <LoginContent />
       </Suspense>

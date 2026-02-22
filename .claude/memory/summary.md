@@ -39,7 +39,14 @@ Backend Ready - Requires Azure AD configuration in Supabase
 - UserReportPreferences (id, userId, reportId, isPinned, sortOrder)
 - ActivityLogs (id, userId, action, entityType, entityId, details)
 
-## Recent Changes (2026-01-26)
+## Recent Changes (2026-02-22)
+- ICP Design System integrated (Phase 1 & 2)
+  - Public Sans font, Pantone 286 C primary, 10px radius
+  - Updated Button (15+ variants), Badge (24+ variants), Input, Card, Alert, Spinner, Empty
+- UI/UX bug sweep: 9 fixes (font, colors, tokens, transitions, text)
+- Admin requires explicit report access (not auto-all)
+
+## Previous Changes (2026-01-26)
 - Removed category system completely
 - Added drag & drop report ordering (@dnd-kit)
 - Added search box in sidebar
